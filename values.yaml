@@ -1,0 +1,23 @@
+replicaCount: 2
+
+image:
+  repository: my-flask-app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 80
+
+env:
+  - name: POSTGRES_HOST
+    value: "my-postgresql.default.svc.cluster.local" # PostgreSQL Service adı
+  - name: POSTGRES_DB
+    value: "postgres" # PostgreSQL veritabanı adı
+  - name: POSTGRES_USER
+    value: "postgres" # PostgreSQL kullanıcı adı
+  - name: POSTGRES_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: my-postgresql # PostgreSQL Secret adı
+        key: postgres-password # Secret içindeki şifre anahtarı

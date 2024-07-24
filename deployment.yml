@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      containers:
+      - name: flask-app
+        image: harbor.havelsan.com.tr/eyeminer/stj/my-flask-app:latest
+        ports:
+        - containerPort: 5003
+        env:
+          - name: POSTGRES_HOST
+            value: "my-postgresql.default.svc.cluster.local"
+          - name: POSTGRES_DB
+            value: "postgres"
+          - name: POSTGRES_USER
+            value: "postgres"
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: my-postgresql
+                key: postgres-password
